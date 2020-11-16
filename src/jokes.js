@@ -1,26 +1,28 @@
-import mainURL from "./settings";
+//import mainURL from "./settings";
 import { useState } from "react";
 
 const TwoJokes = () => {
     const [jokes, setJokes] = useState("");
+    const [countries, setCountries] = useState([])
+
     const GetJokes = () => {
-        fetch(mainURL + "/api/jokes/parallel")
+        //fetch("https://annemaj.dk/ca3/api/jokes/parallel")
+        fetch("http://localhost:8080/ca3/api/name/kim")
             .then((res) => res.json())
             .then((data) => {
                 setJokes(data);
+                setCountries(data.countries)
+                console.log(data.countries);
+
             });
     };
+
     return (
         <div>
-            <h2>Dad joke:</h2>
+            <p>{jokes.name}</p>
+            <p>{jokes.gender}</p>
             <ul>
-            <li>{jokes.joke1}</li>
-            <li>Link: {jokes.joke1Reference}</li>
-            </ul>
-            <h2>Chuck Norris joke:</h2>
-            <ul>
-            <li>{jokes.joke2}</li>
-            <li>Link: {jokes.joke2Reference}</li>
+            {countries.map((countries, index) => <li key={index}>{countries.country_id}</li>)}
             </ul>
             <br/>
             <button class="btn btn-primary" onClick={() => GetJokes()}>Press for two new jokes</button>

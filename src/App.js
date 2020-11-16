@@ -1,17 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from "react"
 import facade from "./apiFacade";
-import TwoJokes from './jokes';
+import NameStatistics from './name';
+//import TwoJokes from './jokes';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
-  NavLink,
-  useParams,
-  useRouteMatch,
-  Prompt,
-  Link,
-  useHistory
+  NavLink
 } from "react-router-dom";
 
 function LogIn({ login, errorMessage, setErrorMessage }) {
@@ -31,16 +26,16 @@ function LogIn({ login, errorMessage, setErrorMessage }) {
 
   return (
     <div>
-      <form onChange={onChange} >
-        <div className="col-sm-1">
-          <br />
-          <h2>Login</h2>
-          <input class="form-control" placeholder="User Name" id="username" />
-          <input class="form-control" placeholder="Password" id="password" />
-          <br />
+      <form className="form-group" onChange={onChange} >
+        <div className="col-sm-2">
+          <input placeholder="User Name" id="username" />
+         
+          <input placeholder="Password" id="password" />
+          <br/><br/>
           <button class="btn btn-primary" onClick={performLogin}>Login</button>
         </div>
       </form>
+      <br/>
       <h2>{errorMessage}</h2>
     </div>
   )
@@ -70,11 +65,8 @@ function Header({ isLoggedin, loginMsg }) {
     <ul className="header">
       <li><NavLink exact activeClassName="active" to="/">Home</NavLink></li>
       {isLoggedin && (
-        <li><NavLink activeClassName="active" to="/jokes">Jokes</NavLink></li>
+        <li><NavLink activeClassName="active" to="/name">Name statistics</NavLink></li>
       )}
-      <li><NavLink activeClassName="active" to="/login-out"> {loginMsg}  </NavLink></li>
-      <li><NavLink activeClassName="active" to="/home2">Home2 </NavLink></li>
-      <li><NavLink activeClassName="active" to="/readme">READ ME</NavLink></li>
     </ul>
   );
 }
@@ -102,41 +94,40 @@ function App() {
   }
 
   return (
-    <div class="col-sm">
+    <div>
       
       <Header loginMsg={loggedIn ? 'You are logged in' : 'Please log in'} isLoggedin={loggedIn} />
 
       <Switch>
 
-        <Route exact path="/">
-          <Home />
-        </Route>
-
-        <Route path='/login-out'>
+        <Route exact path="/">     
           {!loggedIn ? (
+            <>
+            <Home />
             <LogIn
               errorMessage={errorMessage}
               setErrorMessage={setErrorMessage}
               login={login} />
+              <br/><br/>
+              <Reflections />
+              </>
+
           ) : (
               <div>
+                <br/>
                 <LoggedIn />
+                <br/>
                 <button class="btn btn-primary" onClick={logout}>Logout</button>
               </div>
             )}
+
         </Route>
 
-        <Route exact path="/home2">
-          <Home2 />
+
+        <Route path="/name">
+          <Name />
         </Route>
 
-        <Route path="/jokes">
-          <Jokes />
-        </Route>
-        
-        <Route path="/readme">
-          <ReadMe />
-        </Route>
 
         <Route path="*">
           <NoMatch />
@@ -152,27 +143,29 @@ function Home() {
   return (
     <div>
       <br />
-      <h2>Home</h2>
+      <h2>Welcome!</h2>
       <br/>
-      <h4>Please go to the READ ME tab for instructions. </h4>
+      <h4>Please login to get access to the name statistics:</h4>
       <br />
     </div>
   );
 }
 
-function Home2() {
+function Name() {
+  
   return (
     <div>
-      <h2>Home2</h2>
+    <NameStatistics />
     </div>
   );
 }
 
-function Jokes() {
+function Reflections() {
+  
   return (
-    <div>
-      <h2>Two jokes</h2>
-      <TwoJokes />
+    <div className="sm col-6">
+    <h3>Reflections:</h3>
+    <p>I have had great use of the startcode - especially the login part and related tests, as I could implement this with no adjustments needed. However I had to do several changes to the DTO in backend and to the frontend, as my new project fetched an endpoint with an array. This caused me a lot of trouble and extra work, but I can reuse it for my exam and other projects. So maybe I would change the startcode to include the possibility to fetch an array from an endpoint.</p>
     </div>
   );
 }
@@ -183,36 +176,6 @@ const NoMatch = () => {
       <h3>
         No match found for this.
       </h3>
-    </div>
-  );
-};
-
-const ReadMe = () => {
-  return (
-    <div>
-      <h3>
-        READ ME
-      </h3>
-      <br/>
-      <p>
-        <b>Welcome to our REACT App startcode!</b>
-        <br/>
-        <br/>
-        IMPORTANT! Before using our startcode, make sure that you have installed <a href="https://nodejs.org/en/">Node.js</a>.
-        <br/>
-        <br/>
-        <b>How to use:</b>
-        <ul>
-          <li>Download the project <a href="https://github.com/jbndk/CA3-Frontend">here</a></li>
-          <li>Delete the .git file from the project</li>
-          <li>Open the folder in Git Bash or a similar program</li>
-          <li>Run <i>npm start</i> to open the project in a browser with hot reload</li>
-          <li>Run <i>code .</i> to open the project in Visual Studio Code</li>
-          <li>Remember to change the URL in settings.js to point on your own REST endpoint</li>
-        </ul>
-        
-        <b>You are now done - happy coding!</b>
-        </p>
     </div>
   );
 };
